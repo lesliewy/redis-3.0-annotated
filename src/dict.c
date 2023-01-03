@@ -1412,7 +1412,8 @@ static int _dictExpandIfNeeded(dict *d)
     // 一下两个条件之一为真时，对字典进行扩展
     // 1）字典已使用节点数和字典大小之间的比率接近 1：1
     //    并且 dict_can_resize 为真
-    // 2）已使用节点数和字典大小之间的比率超过 dict_force_resize_ratio
+    // 2）强制扩容: 已使用节点数和字典大小之间的比率超过 dict_force_resize_ratio
+    // dict_can_resize= true，表示当前没有 RDB 子进程，并且也没有 AOF 子进程。简言之，redis当前没有进行持久化操作.
     if (d->ht[0].used >= d->ht[0].size &&
         (dict_can_resize ||
          d->ht[0].used/d->ht[0].size > dict_force_resize_ratio))
